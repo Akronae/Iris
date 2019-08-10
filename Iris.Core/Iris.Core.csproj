@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <!-- NuGet information -->
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <Title>Iris.Core</Title>
+        <Authors>Alexandre Daubricourt</Authors>
+        <Description>Modern reliable UDP framework for .NET &amp; Mono.</Description>
+        <Copyright>Alexandre Daubricourt</Copyright>
+        <PackageProjectUrl>https://github.com/Akronae/Iris</PackageProjectUrl>
+        <PackageLicenseUrl>https://github.com/Akronae/Iris/blob/master/LICENSE</PackageLicenseUrl>
+        <PackageIconUrl>https://camo.githubusercontent.com/c6c9631419b18b24346a3ad71d6390af685e0b19/68747470733a2f2f696d616765732e66696e65617274616d65726963612e636f6d2f696d616765732f617274776f726b696d616765732f6d656469756d6c617267652f322f697269732d313830302d6775792d686561642e6a7067</PackageIconUrl>
+        <RepositoryUrl>https://github.com/Akronae/Iris</RepositoryUrl>
+    </PropertyGroup>
+
+    <!-- Automatic date versioned packaging -->
+    <Target Name="NugetPackAutoVersioning" AfterTargets="Build">
+        <Exec Command="dotnet pack -p:PackageVersion=$([System.DateTime]::Now.ToString(&quot;yyyy.MM.dd.HHmmss&quot;)) --no-build --configuration $(Configuration) --output &quot;$(SolutionDir)nuget" />
+    </Target>
+
+    <!-- Third party libraries -->
+    <ItemGroup>
+      <PackageReference Include="Proteus.Core" Version="2019.8.10.112317" />
+    </ItemGroup>
+
+</Project>
