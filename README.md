@@ -107,7 +107,7 @@ var protocolAssembly = new [] {typeof(MessagePacket).Assembly};
 
 var server = new EchoUdpClient(null, protocolAssembly, "UPD Server", serverPort);
 
-var endPoint = new PacketEndPointConnection(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8080));
+var endPoint = new PacketEndPointConnection(new IPEndPoint(IPAddress.Parse("127.0.0.1"), serverPort));
 var client = new EchoUdpClient(endPoint, protocolAssembly, "UDP Client");
 
 client.Send(new MessagePacket("Hey server!"));
@@ -181,7 +181,7 @@ var protocolAssembly = new [] {typeof(MessagePacket).Assembly};
 
 var server = new EchoUdpClient(null, protocolAssembly, "UPD Server", serverPort);
 
-var endPoint = new PacketEndPointConnection(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8080));
+var endPoint = new PacketEndPointConnection(new IPEndPoint(IPAddress.Parse("127.0.0.1"), serverPort));
 var client = new EchoUdpClient(endPoint, protocolAssembly, "UDP Client");
 
 client.Send(new MessagePacket("Hey server!"));
