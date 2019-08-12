@@ -9,7 +9,7 @@ using Proteus.Core;
 
 namespace Iris.Core
 {
-    public abstract class PacketUdpClient <T> :  NetworkUdpClient<T>, IDisposable where T : PacketEndPointConnection
+    public abstract class PacketUdpClient <T> :  NetworkUdpClient<T> where T : PacketEndPointConnection
     {
         private const float ClientRoutineIntervalSeconds = 2f;
         
@@ -19,24 +19,25 @@ namespace Iris.Core
         private readonly ReliabilityFrame<T> _reliabilityFrame;
         private readonly Timer _routineTimer;
         
-        protected PacketUdpClient (int port, T defaultEndPoint, IEnumerable<Assembly> protocolAssemblies, string serverName) : base(port, defaultEndPoint, serverName)
+        protected PacketUdpClient (T defaultEndPoint, IEnumerable<Assembly> protocolAssemblies, string serverName,
+            int listenPort = 0) : base(defaultEndPoint, serverName, listenPort)
         {
+            if (protocolAssemblies == null)
+            {
+                protocolAssemblies = Enumerable.Empty<Assembly>();
+            }
+            
             var assemblies = protocolAssemblies.ToArray().ToList();
             assemblies.Add(typeof(PacketResentRequestPacket).Assembly);
-            
+                
             MessageDispatcher = new MessageDispatcher(Serializer, assemblies);
             _reliabilityFrame = new ReliabilityFrame<T>(this);
 
             _routineTimer = new Timer(_ => LaunchClientsRoutine(), null, 0, (int) (ClientRoutineIntervalSeconds * 1000));
         }
 
-        protected PacketUdpClient (int port, IEnumerable<Assembly> protocolAssemblies, string serverName) : this(port, null, protocolAssemblies, serverName)
+        protected PacketUdpClient (IEnumerable<Assembly> protocolAssemblies, string serverName, int listenPort = 0) : this(null, protocolAssemblies, serverName, listenPort)
         {
-        }
-
-        ~PacketUdpClient ()
-        {
-            Dispose(false);
         }
 
         public void HandleResentPacket (byte[] packet, T client)
@@ -44,7 +45,7 @@ namespace Iris.Core
             OnDataReceive(packet, client.EndPoint);
         }
 
-        protected virtual void OnPacketReceived (byte[] packetData, Packet packet, IPEndPoint endPoint)
+        protected virtual void OnPacketReceived (byte[] rawPacket, Packet packet, IPEndPoint endPoint)
         {
             var udpEndPoint = AddClient(endPoint);
 
@@ -56,7 +57,7 @@ namespace Iris.Core
                 case PacketEndPointConnection.ReceivePacketResult.Received:
                     break;
                 case PacketEndPointConnection.ReceivePacketResult.PacketNumberAlreadyReceived:
-                    break;
+                    return;
                 case PacketEndPointConnection.ReceivePacketResult.MustWaitForAnotherPacket:
                     LogUtils.Warn($"Cannot process {packet} need to wait for {packet.DoNotProceedBeforePacketNumber}");
                     return;
@@ -79,7 +80,19 @@ namespace Iris.Core
         
         protected override void OnDataReceive (byte[] data, IPEndPoint endPoint)
         {
-            var packet = MessageDispatcher.DeserializePacket(data);
+            Packet packet;
+            try
+            {
+                packet = MessageDispatcher.DeserializePacket(data);
+            }
+            catch (Exception e)
+            {
+                Error(
+                    $"Could not deserialize {BitConverter.ToString(data)} sent by {(object) GetClientByIpEndPointOrDefault(endPoint) ?? endPoint}" +
+                    $"\n{e}");
+                
+                return;
+            }
 
             OnPacketReceived(data, packet, endPoint);
         }
@@ -139,18 +152,12 @@ namespace Iris.Core
             }
         }
 
-        private void Dispose (bool disposing)
+        public override void Dispose ()
         {
-            if (disposing)
-            {
-                _routineTimer?.Dispose();
-            }
-        }
-
-        public void Dispose ()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
+            Disposed = true;
+            
+            _routineTimer?.Dispose();
+            base.Dispose();
         }
     }
 }

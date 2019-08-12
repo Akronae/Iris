@@ -60,9 +60,9 @@ namespace Iris.Core
             {
                 if (endPointConnection != null)
                 {
-                    var playerState = (ConnectionState) endPointConnection.ConnectionState;
+                    var playerState = endPointConnection.ConnectionState;
 
-                    if (!handler.Protection.IsFlagSet(playerState) && handler.Protection != ConnectionState.All) continue;
+                    if (!playerState.IsFlagSet(handler.ConnectionState) && handler.ConnectionState != ConnectionState.All) continue;
                     if (!handler.Predicate(endPointConnection)) continue;
                 }
 
@@ -115,12 +115,12 @@ namespace Iris.Core
             return baseGenericPacket.MakeGenericType(type);
         }
 
-        public void RegisterHandlersFrom (object holder)
+        public void RegisterPacketHandlersFrom (object holder)
         {
-            RegisterHandlersFrom(holder, connection => true);
+            RegisterPacketHandlersFrom(holder, connection => true);
         }
 
-        public void RegisterHandlersFrom (object holder, Func<IEndPointConnection, bool> predicate)
+        public void RegisterPacketHandlersFrom (object holder, Func<IEndPointConnection, bool> predicate)
         {
             var handlers = GetHandlersFrom(holder, predicate);
             _handlers.AddRange(handlers);
@@ -157,7 +157,7 @@ namespace Iris.Core
             _handlers.RemoveAll(h => h.Target == holder);
         }
         
-        public void RegisterHandler <TPacket> (Action<TPacket> action, ConnectionState state = ConnectionState.All)
+        public void RegisterHandler <TPacket> (Action<TPacket> action, byte state = ConnectionState.All)
         {
             var handler = new PacketHandler(action.Method, action.Target, state, typeof(TPacket), false, conn => true);
             _handlers.Add(handler);
@@ -208,15 +208,15 @@ namespace Iris.Core
             public readonly Type HandledType;
             public readonly MethodInfo Method;
             public readonly Func<IEndPointConnection, bool> Predicate;
-            public readonly ConnectionState Protection;
+            public readonly byte ConnectionState;
             public readonly object Target;
 
-            public PacketHandler (MethodInfo method, object target, ConnectionState protection, Type handledType,
+            public PacketHandler (MethodInfo method, object target, byte connectionState, Type handledType,
                 bool acceptsArgument, Func<IEndPointConnection, bool> predicate)
             {
                 Method = method;
                 Target = target;
-                Protection = protection;
+                ConnectionState = connectionState;
                 HandledType = handledType;
                 AcceptsArgument = acceptsArgument;
                 Predicate = predicate;

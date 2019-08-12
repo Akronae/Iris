@@ -5,9 +5,9 @@ namespace Iris.Core
     [AttributeUsage(AttributeTargets.Method)]
     public class PacketHandlerAttribute : Attribute
     {
-        public readonly ConnectionState MinimumRequiredState;
+        public readonly byte MinimumRequiredState;
 
-        public PacketHandlerAttribute (ConnectionState minimumRequiredState)
+        public PacketHandlerAttribute (byte minimumRequiredState)
         {
             MinimumRequiredState = minimumRequiredState;
         }

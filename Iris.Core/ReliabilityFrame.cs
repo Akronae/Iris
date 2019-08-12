@@ -10,7 +10,7 @@ namespace Iris.Core
         public ReliabilityFrame (PacketUdpClient<T> client)
         {
             _client = client;
-            _client.MessageDispatcher.RegisterHandlersFrom(this);
+            _client.MessageDispatcher.RegisterPacketHandlersFrom(this);
         }
 
         [PacketHandler(ConnectionState.All)]
@@ -22,7 +22,7 @@ namespace Iris.Core
             // We must not go through the reliability process etc. of _client.Send().
             _client.SendRawPacket(new PacketResentPacket(resent), client);
             
-            LogUtils.Log($"{resentPacket} resent to {client}");
+            LogUtils.Log($"{_client} resent {resentPacket} to {client}");
         }
         
         [PacketHandler(ConnectionState.All)]
@@ -37,12 +37,12 @@ namespace Iris.Core
             if (client.HasReceivedPacket(packet.PacketNumberToAcknowledge))
             {
                 _client.Send(new PacketAcknowledgedPacket(packet.PacketNumberToAcknowledge), client);
-                LogUtils.Log($"Acknowledged packet number {packet.PacketNumberToAcknowledge} to {client}");
+                LogUtils.Log($"{_client} acknowledged packet number {packet.PacketNumberToAcknowledge} to {client}");
             }
             else
             {
                 _client.Send(new PacketResentRequestPacket(packet.PacketNumberToAcknowledge), client);
-                LogUtils.Log($"Asked {client} to resend packet number {packet.PacketNumberToAcknowledge}");
+                LogUtils.Log($"{_client} asked {client} to resend packet number {packet.PacketNumberToAcknowledge}");
             }
         }
         

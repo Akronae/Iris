@@ -3,33 +3,41 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 using Chresimos.Core;
 
 namespace Iris.Core
 {
-    public abstract class NetworkUdpClient <T> where T : EndPointConnection
+    public abstract class NetworkUdpClient <T> : IDisposable where T : EndPointConnection
     {
+            
         public readonly List<T> Clients = new List<T>();
         public bool IsConnected => Connection.Client.Connected;
         protected readonly UdpClient Connection;
         public readonly T DefaultEndPoint;
         protected readonly string ServerName;
-        protected NetworkUdpClient (int port, T defaultEndPoint, string serverName) : this(port)
+        private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+        public WaitHandle WaitHandle => _cancellationTokenSource.Token.WaitHandle;
+        protected bool Disposed;
+        
+        protected NetworkUdpClient (T defaultEndPoint, string serverName, int listenPort = 0) : this(listenPort)
         {
             ServerName = serverName;
             DefaultEndPoint = defaultEndPoint;
             if (DefaultEndPoint != null) Clients.Add(DefaultEndPoint);
         }
 
-        protected NetworkUdpClient (int port)
+        protected NetworkUdpClient (int listenPort)
         {
-            Connection = new UdpClient(port);
+            Connection = new UdpClient(listenPort);
 
             Connection.BeginReceive(OnReceive, null);
         }
         
         private void OnReceive (IAsyncResult ar)
         {
+            if (Disposed) return;
+            
             IPEndPoint endPoint = null;
             var data = Connection.EndReceive(ar, ref endPoint);
             OnDataReceive(data, endPoint);
@@ -54,6 +62,18 @@ namespace Iris.Core
             Connection.Send(data, data.Length, endPoint);
         }
 
+        public virtual void Dispose ()
+        {
+            Disposed = true;
+            
+            Close();
+            _cancellationTokenSource?.Cancel();
+            _cancellationTokenSource?.Dispose();
+            Connection?.Dispose();
+            
+            GC.SuppressFinalize(this);
+        }
+
         public void Close ()
         {
             Connection.Close();
@@ -61,7 +81,7 @@ namespace Iris.Core
 
         protected virtual T AddClient (IPEndPoint ipEndPoint)
         {
-            var udpEndPoint = Clients.Find(c => Equals(c.EndPoint, ipEndPoint));
+            var udpEndPoint = GetClientByIpEndPointOrDefault(ipEndPoint);
             if (udpEndPoint != null) return udpEndPoint;
             
             udpEndPoint = CreateEndPointConnection(ipEndPoint);
@@ -72,9 +92,14 @@ namespace Iris.Core
 
         protected abstract T CreateEndPointConnection (IPEndPoint ipEndPoint);
         
-        public T GetClientByConnId (string id)
+        public T GetClientByConnIdOrDefault (string id)
         {
             return Clients.SingleOrDefault(c => c.Id == id);
+        }
+        
+        public T GetClientByIpEndPointOrDefault (IPEndPoint endPoint)
+        {
+            return Clients.SingleOrDefault(c => Equals(c.EndPoint, endPoint));
         }
 
         protected virtual void Log (string message)
@@ -85,6 +110,16 @@ namespace Iris.Core
         protected virtual void Warn (string message)
         {
             LogUtils.Warn($"[{ServerName}]: {message}");
+        }
+        
+        protected virtual void Error (string message)
+        {
+            LogUtils.Error($"[{ServerName}]: {message}");
+        }
+
+        public override string ToString ()
+        {
+            return ServerName;
         }
     }
 }

@@ -2,12 +2,10 @@
 
 namespace Iris.Core
 {
-    [Flags]
-    public enum ConnectionState
+    public class ConnectionState
     {
-        Unidentified,
-        Handshaked,
-        GameJoined,
-        All
+        public const byte Unidentified = 1;
+        public const byte Handshaked = 2;
+        public const byte All = 3;
     }
 }
