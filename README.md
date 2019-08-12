@@ -84,6 +84,7 @@ public class EchoUdpClient : PacketUdpClient<PacketEndPointConnection>
 
 // The first argument is a unique packet ID inside a protocol ID (second argument).
 [Packet(100, 0)]
+[PacketReliability(PacketReliability.SendTwice | PacketReliability.MustBeAcknowledged)]
 public class MessagePacket : Packet
 {
     [SerializedMember(0)]
@@ -116,8 +117,25 @@ server.WaitHandle.WaitOne();
 
 /**
 OUTPUT:
-127.0.0.1:50976 sent Hey server!
+127.0.0.1:51964 sent Hey server!
+127.0.0.1:51964 sent Hey server!
 127.0.0.1:8080 sent Hey server!
+
+127.0.0.1:8080 sent Hey server!
+
+127.0.0.1:8080 sent Hey server!
+
+127.0.0.1:8080 sent Hey server!
+
+[UPD Server]: Requested 127.0.0.1:51964 (Id 49412) to acknowledge packet MessagePacket (0)
+[UPD Server]: Requested 127.0.0.1:51964 (Id 49412) to acknowledge packet MessagePacket (1)
+UDP Client acknowledged packet number 0 to 127.0.0.1:8080 (Id 43721)
+127.0.0.1:51964 (Id 49412) acknowledged packet number 0
+UDP Client acknowledged packet number 1 to 127.0.0.1:8080 (Id 43721)
+127.0.0.1:51964 (Id 49412) acknowledged packet number 1
+[UDP Client]: Requested 127.0.0.1:8080 (Id 43721) to acknowledge packet MessagePacket (0)
+UPD Server acknowledged packet number 0 to 127.0.0.1:51964 (Id 49412)
+127.0.0.1:8080 (Id 43721) acknowledged packet number 0
 **/
 ```
 
