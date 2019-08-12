@@ -35,6 +35,7 @@ const int serverPort = 8080;
 
 // The first argument is the default endpoint which is used as receiver if `server.Send` is called
 // without endpoint argument. Being a server, there is no default endpoint.
+// Second is the client name, which is used for logging.
 var server = new EchoUdpClient(null, "UPD Server", serverPort);
 
 var endPoint = new EndPointConnection(new IPEndPoint(IPAddress.Parse("127.0.0.1"), serverPort));
@@ -48,5 +49,73 @@ server.WaitHandle.WaitOne();
 OUTPUT:
 127.0.0.1:49663 sent Hello server!
 127.0.0.1:8080 sent Hello server!
+**/
+```
+
+```cs
+// Now inherits from `PacketUdpClient` which handles packets instead of `NetworkUdpClient`.
+public class EchoUdpClient : PacketUdpClient<PacketEndPointConnection>
+{
+    public EchoUdpClient (PacketEndPointConnection defaultEndPoint, IEnumerable<Assembly> protocolAssemblies, string serverName, int listenPort = 0) : base(defaultEndPoint, protocolAssemblies, serverName, listenPort)
+    {
+    }
+    
+    protected override PacketEndPointConnection CreateEndPointConnection (IPEndPoint ipEndPoint)
+    {
+        return new PacketEndPointConnection(ipEndPoint);
+    }
+
+    protected override void OnPacketReceived (byte[] rawPacket, Packet packet, IPEndPoint endPoint)
+    {
+        base.OnPacketReceived(rawPacket, packet, endPoint);
+
+        if (!(packet is MessagePacket mp)) return;
+
+        var sender = GetClientByIpEndPointOrDefault(endPoint);
+        Console.WriteLine($"{endPoint} sent {mp.Message}");
+
+        if (!mp.Message.EndsWith("\n"))
+        {
+            Send(new MessagePacket(mp.Message + "\n"), sender);
+        }
+    }
+}
+
+// The first argument is a unique packet ID inside a protocol ID (second argument).
+[Packet(100, 0)]
+public class MessagePacket : Packet
+{
+    [SerializedMember(0)]
+    public string Message;
+
+    public MessagePacket (string message)
+    {
+        Message = message;
+    }
+
+    // As long as there constructors in packets, there must be an empty constructor for the packet to be
+    // instantiated by reflection during deserialization.
+    public MessagePacket ()
+    {
+    }
+}
+
+const int serverPort = 8080;
+// A `PacketUdpClient` needs to know which packets are referenced for deserializing.
+var protocolAssembly = new [] {typeof(MessagePacket).Assembly};
+
+var server = new EchoUdpClient(null, protocolAssembly, "UPD Server", serverPort);
+
+var endPoint = new PacketEndPointConnection(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8080));
+var client = new EchoUdpClient(endPoint, protocolAssembly, "UDP Client");
+
+client.Send(new MessagePacket("Hey server!"));
+
+server.WaitHandle.WaitOne();
+
+/**
+OUTPUT:
+127.0.0.1:50976 sent Hey server!
+127.0.0.1:8080 sent Hey server!
 **/
 ```
