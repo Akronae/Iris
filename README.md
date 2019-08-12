@@ -51,12 +51,13 @@ OUTPUT:
 127.0.0.1:8080 sent Hello server!
 **/
 ```
-
+## Using Packets
 ```cs
 // Now inherits from `PacketUdpClient` which handles packets instead of `NetworkUdpClient`.
 public class EchoUdpClient : PacketUdpClient<PacketEndPointConnection>
 {
-    public EchoUdpClient (PacketEndPointConnection defaultEndPoint, IEnumerable<Assembly> protocolAssemblies, string serverName, int listenPort = 0) : base(defaultEndPoint, protocolAssemblies, serverName, listenPort)
+    public EchoUdpClient (PacketEndPointConnection defaultEndPoint, IEnumerable<Assembly> protocolAssemblies,
+    string serverName, int listenPort = 0) : base(defaultEndPoint, protocolAssemblies, serverName, listenPort)
     {
     }
     
@@ -117,5 +118,79 @@ server.WaitHandle.WaitOne();
 OUTPUT:
 127.0.0.1:50976 sent Hey server!
 127.0.0.1:8080 sent Hey server!
+**/
+```
+
+## Using Frames
+```cs
+public class MessageFrame : Frame<PacketUdpClient<PacketEndPointConnection>, PacketEndPointConnection>
+{
+    public MessageFrame (PacketUdpClient<PacketEndPointConnection> server) : base(server)
+    {
+    }
+    
+    // This handler will always be called because it is protected with `ConnectionState.All`.
+    // The connection state is set on `sender.ConnectionState`.
+    // The class `ConnectionState` can be inherited to create custom states,
+    // be careful though to not define new states on values already taken by `ConnectionState`. 
+    [PacketHandler(ConnectionState.All)]
+    public void HandleMessagePacket (MessagePacket packet, PacketEndPointConnection sender)
+    {
+        LogUtils.Log($"{sender} sent {packet.Message}");
+        
+        if (!packet.Message.EndsWith("\n"))
+        {
+            Connection.Send(new MessagePacket(packet.Message + "\n"), sender);
+        }
+    }
+}
+
+public class EchoUdpClient : PacketUdpClient<PacketEndPointConnection>
+{
+    public EchoUdpClient (PacketEndPointConnection defaultEndPoint, IEnumerable<Assembly> protocolAssemblies,
+    string serverName, int, listenPort = 0) : base(defaultEndPoint, protocolAssemblies, serverName, listenPort)
+    {
+        // Each frame need to be instantiated by the client which is supposed to receive the packets.
+        new MessageFrame(this);
+    }
+    
+    protected override PacketEndPointConnection CreateEndPointConnection (IPEndPoint ipEndPoint)
+    {
+        return new PacketEndPointConnection(ipEndPoint);
+    }
+}
+
+[Packet(100, 0)]
+public class MessagePacket : Packet
+{
+    [SerializedMember(0)]
+    public string Message;
+
+    public MessagePacket (string message)
+    {
+        Message = message;
+    }
+
+    public MessagePacket ()
+    {
+    }
+}
+
+const int serverPort = 8080;
+var protocolAssembly = new [] {typeof(MessagePacket).Assembly};
+
+var server = new EchoUdpClient(null, protocolAssembly, "UPD Server", serverPort);
+
+var endPoint = new PacketEndPointConnection(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8080));
+var client = new EchoUdpClient(endPoint, protocolAssembly, "UDP Client");
+
+client.Send(new MessagePacket("Hey server!"));
+
+server.WaitHandle.WaitOne();
+
+/**
+OUTPUT:
+127.0.0.1:59899 (Id 47322) sent Hey server!
+127.0.0.1:8080 (Id 90471) sent Hey server!
 **/
 ```
