@@ -10,8 +10,7 @@ Modern reliable UDP framework for .NET &amp; Mono.
 ```cs
 public class EchoUdpClient : NetworkUdpClient<EndPointConnection>
 {
-    public EchoUdpClient (EndPointConnection defaultEndPoint, string serverName, int listenPort = 0)
-    : base(defaultEndPoint, serverName, listenPort)
+    public EchoUdpClient (NetworkUdpClientConfiguration<EndPointConnection> config) : base(config)
     {
     }
     
@@ -36,10 +35,21 @@ const int serverPort = 8080;
 // The first argument is the default endpoint which is used as receiver if `server.Send` is called
 // without endpoint argument. Being a server, there is no default endpoint.
 // Second is the client name, which is used for logging.
-var server = new EchoUdpClient(null, "UPD Server", serverPort);
+var serverConfig = new NetworkUdpClientConfiguration<EndPointConnection
+{
+    ServerName = "UDP Server",
+    ListenPort = serverPort
+};
+var server = new EchoUdpClient(serverConfig);
 
 var endPoint = new EndPointConnection(new IPEndPoint(IPAddress.Parse("127.0.0.1"), serverPort));
-var client = new EchoUdpClient(endPoint, "UDP Client");
+var clientConfig = new NetworkUdpClientConfiguration<EndPointConnection>
+{
+    DefaultEndPoint = endPoint,
+    ServerName = "UDP Client",
+};
+var client = new EchoUdpClient(clientConfig);
+
 client.Send(Encoding.ASCII.GetBytes("Hello server!"));
 
 // Prevent the thread on which the server is running from terminating.
@@ -56,8 +66,7 @@ OUTPUT:
 // Now inherits from `PacketUdpClient` which handles packets instead of `NetworkUdpClient`.
 public class EchoUdpClient : PacketUdpClient<PacketEndPointConnection>
 {
-    public EchoUdpClient (PacketEndPointConnection defaultEndPoint, IEnumerable<Assembly> protocolAssemblies,
-    string serverName, int listenPort = 0) : base(defaultEndPoint, protocolAssemblies, serverName, listenPort)
+    public EchoUdpClient (PacketUdpClientConfiguration<PacketEndPointConnection> config) : base(config)
     {
     }
     
@@ -104,12 +113,22 @@ public class MessagePacket : Packet
 
 const int serverPort = 8080;
 // A `PacketUdpClient` needs to know which packets are referenced for deserializing.
-var protocolAssembly = new [] {typeof(MessagePacket).Assembly};
+var protocolAssembly = typeof(MessagePacket).Assembly;
 
-var server = new EchoUdpClient(null, protocolAssembly, "UPD Server", serverPort);
+var serverConfig = new PacketUdpClientConfiguration<PacketEndPointConnection>
+{
+    ServerName = "UDP Server",
+    ListenPort = serverPort
+}.AddProtocolAssembly(protocolAssembly);
+var server = new EchoUdpClient(serverConfig);
 
 var endPoint = new PacketEndPointConnection(new IPEndPoint(IPAddress.Parse("127.0.0.1"), serverPort));
-var client = new EchoUdpClient(endPoint, protocolAssembly, "UDP Client");
+var clientConfig = new PacketUdpClientConfiguration<PacketEndPointConnection>
+{
+    DefaultEndPoint = endPoint,
+    ServerName = "UDP Client",
+}.AddProtocolAssembly(protocolAssembly);
+var client = new EchoUdpClient(clientConfig);
 
 client.Send(new MessagePacket("Hey server!"));
 
@@ -155,8 +174,7 @@ public class MessageFrame : Frame<PacketUdpClient<PacketEndPointConnection>, Pac
 
 public class EchoUdpClient : PacketUdpClient<PacketEndPointConnection>
 {
-    public EchoUdpClient (PacketEndPointConnection defaultEndPoint, IEnumerable<Assembly> protocolAssemblies,
-    string serverName, int, listenPort = 0) : base(defaultEndPoint, protocolAssemblies, serverName, listenPort)
+    public EchoUdpClient (PacketUdpClientConfiguration<PacketEndPointConnection> config) : base(config)
     {
         // Each frame need to be instantiated by the client which is supposed to receive the packets.
         new MessageFrame(this);
@@ -185,12 +203,22 @@ public class MessagePacket : Packet
 }
 
 const int serverPort = 8080;
-var protocolAssembly = new [] {typeof(MessagePacket).Assembly};
+var protocolAssembly = typeof(MessagePacket).Assembly;
 
-var server = new EchoUdpClient(null, protocolAssembly, "UPD Server", serverPort);
+var serverConfig = new PacketUdpClientConfiguration<PacketEndPointConnection>
+{
+    ServerName = "UDP Server",
+    ListenPort = serverPort
+}.AddProtocolAssembly(protocolAssembly);
+var server = new EchoUdpClient(serverConfig);
 
 var endPoint = new PacketEndPointConnection(new IPEndPoint(IPAddress.Parse("127.0.0.1"), serverPort));
-var client = new EchoUdpClient(endPoint, protocolAssembly, "UDP Client");
+var clientConfig = new PacketUdpClientConfiguration<PacketEndPointConnection>
+{
+    DefaultEndPoint = endPoint,
+    ServerName = "UDP Client",
+}.AddProtocolAssembly(protocolAssembly);
+var client = new EchoUdpClient(clientConfig);
 
 client.Send(new MessagePacket("Hey server!"));
 
