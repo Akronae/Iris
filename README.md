@@ -10,7 +10,7 @@ Modern reliable UDP framework for .NET &amp; Mono.
 ```cs
 public class EchoUdpClient : NetworkUdpClient<EndPointConnection>
 {
-    public EchoUdpClient (NetworkUdpClientConfiguration<EndPointConnection> configuration) : base(configuration)
+    public EchoUdpClient (NetworkUdpClientConfiguration<EndPointConnection> config) : base(config)
     {
     }
     
@@ -66,7 +66,7 @@ OUTPUT:
 // Now inherits from `PacketUdpClient` which handles packets instead of `NetworkUdpClient`.
 public class EchoUdpClient : PacketUdpClient<PacketEndPointConnection>
 {
-    public EchoUdpClient (PacketUdpClientConfiguration<PacketEndPointConnection> configuration) : base(configuration)
+    public EchoUdpClient (PacketUdpClientConfiguration<PacketEndPointConnection> config) : base(config)
     {
     }
     
@@ -174,7 +174,7 @@ public class MessageFrame : Frame<PacketUdpClient<PacketEndPointConnection>, Pac
 
 public class EchoUdpClient : PacketUdpClient<PacketEndPointConnection>
 {
-    public EchoUdpClient (PacketUdpClientConfiguration<PacketEndPointConnection> configuration) : base(configuration)
+    public EchoUdpClient (PacketUdpClientConfiguration<PacketEndPointConnection> config) : base(config)
     {
         // Each frame need to be instantiated by the client which is supposed to receive the packets.
         new MessageFrame(this);
