@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Threading;
 using Chresimos.Core;
@@ -20,20 +21,22 @@ namespace Iris.Core
         public WaitHandle WaitHandle => _cancellationTokenSource.Token.WaitHandle;
         protected bool Disposed;
         
-        protected NetworkUdpClient (T defaultEndPoint, string serverName, int listenPort = 0) : this(listenPort)
+        protected NetworkUdpClient (NetworkUdpClientConfiguration<T> configuration)
         {
-            ServerName = serverName;
-            DefaultEndPoint = defaultEndPoint;
+            if (!NetworkUtils.IsPortAvailable(configuration.ListenPort))
+            {
+                throw LogUtils.Throw(
+                    $"{configuration.ServerName} cannot listen on port {configuration.ListenPort} which is already occupied.");
+            }
+            
+            ServerName = configuration.ServerName;
+            DefaultEndPoint = configuration.DefaultEndPoint;
             if (DefaultEndPoint != null) Clients.Add(DefaultEndPoint);
-        }
-
-        protected NetworkUdpClient (int listenPort)
-        {
-            Connection = new UdpClient(listenPort);
+            Connection = new UdpClient(configuration.ListenPort);
 
             Connection.BeginReceive(OnReceive, null);
         }
-        
+
         private void OnReceive (IAsyncResult ar)
         {
             if (Disposed) return;

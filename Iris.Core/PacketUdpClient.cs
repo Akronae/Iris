@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Reflection;
-using System.Threading;
+using System.Timers;
 using Chresimos.Core;
 using Proteus.Core;
 
@@ -11,7 +11,7 @@ namespace Iris.Core
 {
     public abstract class PacketUdpClient <T> :  NetworkUdpClient<T> where T : PacketEndPointConnection
     {
-        private const float ClientRoutineIntervalSeconds = 2f;
+        private const int ClientRoutineIntervalMs = 2000;
         
         public readonly Serializer Serializer = new Serializer(new LoadedAssembliesGenericTypesProvider());
         public readonly MessageDispatcher MessageDispatcher;
@@ -19,25 +19,11 @@ namespace Iris.Core
         private readonly ReliabilityFrame<T> _reliabilityFrame;
         private readonly Timer _routineTimer;
         
-        protected PacketUdpClient (T defaultEndPoint, IEnumerable<Assembly> protocolAssemblies, string serverName,
-            int listenPort = 0) : base(defaultEndPoint, serverName, listenPort)
+        protected PacketUdpClient (PacketUdpClientConfiguration<T> configuration) : base(configuration)
         {
-            if (protocolAssemblies == null)
-            {
-                protocolAssemblies = Enumerable.Empty<Assembly>();
-            }
-            
-            var assemblies = protocolAssemblies.ToArray().ToList();
-            assemblies.Add(typeof(PacketResentRequestPacket).Assembly);
-                
-            MessageDispatcher = new MessageDispatcher(Serializer, assemblies);
+            MessageDispatcher = new MessageDispatcher(Serializer, configuration.ProtocolAssemblies);
             _reliabilityFrame = new ReliabilityFrame<T>(this);
-
-            _routineTimer = new Timer(_ => LaunchClientsRoutine(), null, 0, (int) (ClientRoutineIntervalSeconds * 1000));
-        }
-
-        protected PacketUdpClient (IEnumerable<Assembly> protocolAssemblies, string serverName, int listenPort = 0) : this(null, protocolAssemblies, serverName, listenPort)
-        {
+            _routineTimer = TimerUtils.SetInterval(LaunchClientsRoutine, ClientRoutineIntervalMs);
         }
 
         public void HandleResentPacket (byte[] packet, T client)
