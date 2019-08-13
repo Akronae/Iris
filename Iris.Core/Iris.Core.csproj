@@ -13,8 +13,8 @@
         <RepositoryUrl>https://github.com/Akronae/Iris</RepositoryUrl>
     </PropertyGroup>
     <ItemGroup>
-      <PackageReference Include="Chresimos.Core" Version="2019.8.13.153848" />
-      <PackageReference Include="Proteus.Core" Version="2019.8.13.145149" />
+      <PackageReference Include="Chresimos.Core" Version="2019.8.13.184520" />
+      <PackageReference Include="Proteus.Core" Version="2019.8.13.184959" />
     </ItemGroup>
 
     <!-- Automatic date versioned packaging -->

@@ -8,7 +8,7 @@ namespace Iris.Core
         public Type GenericType;
 
         [SerializedMember(0)]
-        public int GenericTypeId = GenericTypesConsts.UndefinedType;
+        public int GenericTypeId = GenericTypesConsts.UndefinedTypeId;
 
         public GenericPacket ()
         {
