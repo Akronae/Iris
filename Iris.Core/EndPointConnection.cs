@@ -6,7 +6,7 @@ namespace Iris.Core
     public class EndPointConnection : IEndPointConnection
     {
         public string Id { get; } = RandUtils.RandomId();
-        public byte ConnectionState { get; set; }
+        public byte ConnectionState { get; set; } = Core.ConnectionState.Unidentified;
         
         public readonly IPEndPoint EndPoint;
 

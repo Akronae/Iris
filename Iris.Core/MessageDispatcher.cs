@@ -78,9 +78,10 @@ namespace Iris.Core
         }
 
         public Packet DeserializePacket (byte[] data)
-        {
+        {    
             var basePacket = _serializer.Deserialize<Packet>(data);
 
+           
             if (!_storage.HasPacketType(basePacket))
             {
                 LogUtils.Log($"Could not found packet associated with Protocol ID: {basePacket.ProtocolId} and Packet ID: {basePacket.PackedId}");
@@ -152,12 +153,12 @@ namespace Iris.Core
             return handlers;
         }
 
-        public void RemoveHandlersFrom (object holder)
+        public void RemovePacketHandlersFrom (object holder)
         {
             _handlers.RemoveAll(h => h.Target == holder);
         }
         
-        public void RegisterHandler <TPacket> (Action<TPacket> action, byte state = ConnectionState.All)
+        public void RegisterPacketHandler <TPacket> (Action<TPacket> action, byte state = ConnectionState.All)
         {
             var handler = new PacketHandler(action.Method, action.Target, state, typeof(TPacket), false, conn => true);
             _handlers.Add(handler);
