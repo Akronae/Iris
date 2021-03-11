@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\Users\alexr\AppData\Local\JetBrains\Rider2020.1\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\alexr\AppData\Local\JetBrains\Rider2020.1\resharper-host\Local\Transient\ReSharperHost\v201\SolutionCaches\_Iris.1785373231.00" t="ExcludeRecursive" />
+    <e p="C:\Users\alexr\AppData\Roaming\JetBrains\Rider2020.1\consoles\db" t="IncludeRecursive" />
+    <e p="C:\Users\alexr\AppData\Roaming\JetBrains\Rider2020.1\extensions" t="IncludeRecursive" />
+    <e p="C:\Users\alexr\prog\Iris" t="IncludeFlat">
+      <e p="Iris.Core" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="ConnectionState.cs" t="Include" />
+        <e p="EndPointConnection.cs" t="Include" />
+        <e p="Frame.cs" t="Include" />
+        <e p="GenericPacket.cs" t="Include" />
+        <e p="IEndPointConnection.cs" t="Include" />
+        <e p="Iris.Core.csproj" t="IncludeRecursive" />
+        <e p="MessageDispatcher.cs" t="Include" />
+        <e p="MessageDispatcherStorage.cs" t="Include" />
+        <e p="NetworkUdpClient.cs" t="Include" />
+        <e p="NetworkUdpClientConfiguration.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="Iris.Core.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Packet.cs" t="Include" />
+        <e p="PacketAcknowledgedPacket.cs" t="Include" />
+        <e p="PacketAcknowledgmentRequestPacket.cs" t="Include" />
+        <e p="PacketAttribute.cs" t="Include" />
+        <e p="PacketEndPointConnection.cs" t="Include" />
+        <e p="PacketHandlerAttribute.cs" t="Include" />
+        <e p="PacketReliability.cs" t="Include" />
+        <e p="PacketReliabilityAttribute.cs" t="Include" />
+        <e p="PacketResentPacket.cs" t="Include" />
+        <e p="PacketResentRequestPacket.cs" t="Include" />
+        <e p="PacketUdpClient.cs" t="Include" />
+        <e p="PacketUdpClientConfiguration.cs" t="Include" />
+        <e p="ReliabilityFrame.cs" t="Include" />
+      </e>
+      <e p="Iris.sln" t="IncludeFlat" />
+      <e p="packages" t="ExcludeRecursive" />
+    </e>
+  </component>
+</project>

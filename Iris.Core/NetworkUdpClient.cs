@@ -5,7 +5,7 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Threading;
-using Chresimos.Core;
+using Chresimos.Core.Utils;
 
 namespace Iris.Core
 {
@@ -23,7 +23,7 @@ namespace Iris.Core
         
         protected NetworkUdpClient (NetworkUdpClientConfiguration<T> configuration)
         {
-            if (!NetworkUtils.IsPortAvailable(configuration.ListenPort))
+            if (configuration.ListenPort != 0 && !NetworkUtils.IsPortAvailable(configuration.ListenPort))
             {
                 throw LogUtils.Throw(
                     $"{configuration.ServerName} cannot listen on port {configuration.ListenPort} which is already occupied.");

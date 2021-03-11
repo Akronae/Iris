@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using Chresimos.Core;
+using Chresimos.Core.Utils;
 
 namespace Iris.Core
 {

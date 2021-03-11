@@ -4,7 +4,7 @@ namespace Iris.Core
     {
         public TEndPoint DefaultEndPoint;
         public string ServerName;
-        public int ListenPort = 0;
+        public int ListenPort;
 
         public NetworkUdpClientConfiguration<TEndPoint> SetDefaultEndPoint (TEndPoint endPoint)
         {

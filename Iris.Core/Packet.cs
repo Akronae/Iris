@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using Chresimos.Core;
+using Chresimos.Core.Utils;
 using Proteus.Core;
 
 namespace Iris.Core

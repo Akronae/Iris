@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Timers;
-using Chresimos.Core;
+using Chresimos.Core.Utils;
 using Proteus.Core;
 
 namespace Iris.Core

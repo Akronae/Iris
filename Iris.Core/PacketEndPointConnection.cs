@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using Chresimos.Core;
+using Chresimos.Core.Utils;
 
 namespace Iris.Core
 {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Chresimos.Core;
+using Chresimos.Core.Utils;
 using Proteus.Core;
 
 namespace Iris.Core
@@ -62,7 +62,11 @@ namespace Iris.Core
                 {
                     var playerState = endPointConnection.ConnectionState;
 
-                    if (!playerState.IsFlagSet(handler.ConnectionState) && handler.ConnectionState != ConnectionState.All) continue;
+                    if (!playerState.IsFlagSet(handler.ConnectionState) &&
+                        handler.ConnectionState != ConnectionState.All)
+                    {
+                        continue;
+                    }
                     if (!handler.Predicate(endPointConnection)) continue;
                 }
 

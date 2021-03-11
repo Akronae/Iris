@@ -12,10 +12,6 @@
         <PackageIconUrl>https://camo.githubusercontent.com/c6c9631419b18b24346a3ad71d6390af685e0b19/68747470733a2f2f696d616765732e66696e65617274616d65726963612e636f6d2f696d616765732f617274776f726b696d616765732f6d656469756d6c617267652f322f697269732d313830302d6775792d686561642e6a7067</PackageIconUrl>
         <RepositoryUrl>https://github.com/Akronae/Iris</RepositoryUrl>
     </PropertyGroup>
-    <ItemGroup>
-      <PackageReference Include="Chresimos.Core" Version="2019.8.13.184520" />
-      <PackageReference Include="Proteus.Core" Version="2019.8.13.184959" />
-    </ItemGroup>
 
     <!-- Automatic date versioned packaging -->
     <Target Name="NugetPackAutoVersioning" AfterTargets="Build">
@@ -23,5 +19,16 @@
     </Target>
 
     <!-- Third party libraries -->
-
+    <ItemGroup>
+        <Reference Include="Chresimos.Core">
+            <HintPath>..\..\Chresimos\Chresimos.Core\bin\Debug\netstandard2.0\Chresimos.Core.dll</HintPath>
+            <SpecificVersion>false</SpecificVersion>
+            <PrivateAssets>all</PrivateAssets>
+        </Reference>
+        <Reference Include="Proteus.Core">
+            <HintPath>..\..\Proteus\Proteus.Core\bin\Debug\netstandard2.0\Proteus.Core.dll</HintPath>
+            <SpecificVersion>false</SpecificVersion>
+            <PrivateAssets>all</PrivateAssets>
+        </Reference>
+    </ItemGroup>
 </Project>
