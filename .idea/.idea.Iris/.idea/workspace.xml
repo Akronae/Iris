@@ -2,16 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cc53bb21-c2a3-452f-8c04-c7807a379e97" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/Iris.Core/EndPointConnection.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Iris.Core/EndPointConnection.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Iris.Core/Iris.Core.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Iris.Core/Iris.Core.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Iris.Core/MessageDispatcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Iris.Core/MessageDispatcher.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Iris.Core/MessageDispatcherStorage.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Iris.Core/MessageDispatcherStorage.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Iris.Core/NetworkUdpClient.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Iris.Core/NetworkUdpClient.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Iris.Core/NetworkUdpClientConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Iris.Core/NetworkUdpClientConfiguration.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Iris.Core/Packet.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Iris.Core/Packet.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Iris/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Iris/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Iris.Core/PacketEndPointConnection.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Iris.Core/PacketEndPointConnection.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Iris.Core/PacketUdpClient.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Iris.Core/PacketUdpClient.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Iris.Core/ReliabilityFrame.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Iris.Core/ReliabilityFrame.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,10 +19,12 @@
     <setting file="file://$PROJECT_DIR$/Iris.Core/ReliabilityFrame.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Iris.Core/NetworkUdpClientConfiguration.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Iris.Core/NetworkUdpClient.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Iris.Core/PacketEndPointConnection.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Iris.Core/MessageDispatcher.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Iris.Core/MessageDispatcherStorage.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Iris.Core/PacketUdpClient.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Iris.Core/Packet.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Iris.Core/PacketAcknowledgmentRequestPacket.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../Proteus/Proteus.Core/Serializer.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Iris.Core/EndPointConnection.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
@@ -39,11 +34,12 @@
         <option value="$PROJECT_DIR$/../../../../Program Files/dotnet/sdk/3.1.201/Sdks/NuGet.Build.Tasks.Pack/build/NuGet.Build.Tasks.Pack.targets" />
         <option value="$PROJECT_DIR$/Iris.Core/Iris.Core.csproj" />
         <option value="$PROJECT_DIR$/Iris.Core/MessageDispatcher.cs" />
-        <option value="$PROJECT_DIR$/Iris.Core/PacketUdpClient.cs" />
         <option value="$PROJECT_DIR$/../Proteus/Proteus.Core/Serializer.cs" />
         <option value="$PROJECT_DIR$/Iris.Core/EndPointConnection.cs" />
         <option value="$PROJECT_DIR$/Iris.Core/NetworkUdpClient.cs" />
         <option value="$PROJECT_DIR$/Iris.Core/NetworkUdpClientConfiguration.cs" />
+        <option value="$PROJECT_DIR$/Iris.Core/PacketUdpClient.cs" />
+        <option value="$PROJECT_DIR$/Iris.Core/PacketEndPointConnection.cs" />
       </list>
     </option>
   </component>
@@ -73,6 +69,8 @@
       <workItem from="1613923738176" duration="613000" />
       <workItem from="1614683108634" duration="53000" />
       <workItem from="1615396539917" duration="1530000" />
+      <workItem from="1615910260597" duration="760000" />
+      <workItem from="1616577525259" duration="1655000" />
     </task>
     <servers />
   </component>
@@ -82,14 +80,14 @@
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="-1282" y="275" width="644" height="582" key="find.popup" timestamp="1614683126862">
+    <state x="-1282" y="275" width="644" height="582" key="find.popup" timestamp="1616578268873">
       <screen x="-1920" y="0" width="1920" height="1080" />
     </state>
-    <state x="-1282" y="275" width="644" height="582" key="find.popup/0.0.1920.1080/-1920.0.1920.1080@-1920.0.1920.1080" timestamp="1614683126862" />
-    <state x="-1297" y="235" width="672" height="678" key="search.everywhere.popup" timestamp="1615396564008">
+    <state x="-1282" y="275" width="644" height="582" key="find.popup/0.0.1920.1080/-1920.0.1920.1080@-1920.0.1920.1080" timestamp="1616578268873" />
+    <state x="-1297" y="235" width="672" height="678" key="search.everywhere.popup" timestamp="1616578474572">
       <screen x="-1920" y="0" width="1920" height="1080" />
     </state>
-    <state x="-1297" y="235" width="672" height="678" key="search.everywhere.popup/0.0.1920.1080/-1920.0.1920.1080@-1920.0.1920.1080" timestamp="1615396564008" />
+    <state x="-1297" y="235" width="672" height="678" key="search.everywhere.popup/0.0.1920.1080/-1920.0.1920.1080@-1920.0.1920.1080" timestamp="1616578474572" />
     <state x="623" y="235" width="672" height="678" key="search.everywhere.popup/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1613761931139" />
   </component>
 </project>

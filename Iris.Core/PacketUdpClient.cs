@@ -48,7 +48,7 @@ namespace Iris.Core
                     LogUtils.Warn($"Cannot process {packet} need to wait for {packet.DoNotProceedBeforePacketNumber}");
                     return;
                 case PacketEndPointConnection.ReceivePacketResult.PacketNumberAlreadyProcessed:
-                    Log($"{endPoint} sent {packet} while it as already been processed.");
+                    Log($"{endPoint} sent {packet} while it has already been processed.");
                     return;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(receiveResult));

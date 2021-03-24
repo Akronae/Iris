@@ -20,11 +20,15 @@ namespace Iris.Core
         private readonly Dictionary<int, Packet> _unprocessedPackets = new Dictionary<int, Packet>();
         private int _lastSentPacketNumber;
         private int _lastBlockingStreamSentPacketNumber = Packet.UndefinedPacketNumber;
+        private readonly object SendLock = new object();
 
         public void AddToSentPackets (Packet packet)
         {
-            packet.PacketNumber = _lastSentPacketNumber++;
-            packet.DoNotProceedBeforePacketNumber = _lastBlockingStreamSentPacketNumber;
+            lock (SendLock)
+            {
+                packet.PacketNumber = _lastSentPacketNumber++;
+                packet.DoNotProceedBeforePacketNumber = _lastBlockingStreamSentPacketNumber;
+            }
 
             if (packet.Reliability.IsFlagSet(PacketReliability.MustBeProcessedBeforeLaterPackets))
             {
